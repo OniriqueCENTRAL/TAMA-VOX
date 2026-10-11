@@ -1,0 +1,34 @@
+name: build
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-2022, macos-14]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dépendances Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libx11-xcb-dev libxcb-util-dev libxcb-cursor-dev libxcb-xkb-dev \
+            libxkbcommon-dev libxkbcommon-x11-dev libfontconfig1-dev libcairo2-dev libgtkmm-3.0-dev \
+            libsqlite3-dev libxcb-keysyms1-dev libpango1.0-dev
+      - name: Configurer
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTAMA_DEPLOY=OFF
+      - name: Compiler
+        run: cmake --build build --config Release --parallel
+      - name: Tests DSP
+        run: ctest --test-dir build -C Release --output-on-failure
+      - name: Validator VST3 (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          pkg=$(find build -name TAMA_VOX.vst3 -type d | head -1)
+          build/bin/Release/validator "$pkg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TAMA_VOX-${{ matrix.os }}
+          path: |
+            build/VST3/Release/TAMA_VOX.vst3

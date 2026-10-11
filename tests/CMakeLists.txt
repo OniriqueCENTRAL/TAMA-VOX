@@ -1,0 +1,27 @@
+# Tests TAMA-VOX : indépendants du SDK VST3.
+include(CTest)
+
+if(TAMA_BUILD_TESTS)
+  add_executable(test_dsp test_dsp.cpp)
+  target_compile_features(test_dsp PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(test_dsp PRIVATE /utf-8 /Zc:__cplusplus /fp:precise)
+  else()
+    target_compile_options(test_dsp PRIVATE -Wall -Wextra -fno-fast-math -ffp-contract=off -Wno-mismatched-new-delete)
+  endif()
+  add_test(NAME dsp COMMAND test_dsp)
+  set_tests_properties(dsp PROPERTIES TIMEOUT 300)
+
+  # Programmes de mesure détaillés (affichent des chiffres, ne valident rien automatiquement)
+  option(TAMA_BUILD_TOOLS "Compiler les programmes de mesure (t_*.cpp)" OFF)
+  if(TAMA_BUILD_TOOLS)
+    foreach(t t_os t_fir t_adaa t_wdf t_engine t_blocks)
+      add_executable(${t} ${t}.cpp)
+      target_compile_features(${t} PRIVATE cxx_std_20)
+    endforeach()
+  endif()
+endif()
+
+if(TAMA_BUILD_UI_PREVIEW)
+  add_subdirectory(ui)
+endif()
