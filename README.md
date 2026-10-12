@@ -2,7 +2,7 @@
 
 Habillage « Onirique » (rouge sang, braise, sigil blanc) sur le Tamagotchi d'origine.
 
-C++20 / CMake, sans JUCE, **sans aucun DRM** (volontairement, malgré le cahier des charges).
+C++20 / CMake, sans JUCE. Licence ONIRIQUE : dossier `License/`, le même dans tous les plugins (voir `License/README.md`).
 SDK VST3 3.7.11 (FetchContent), interface VSTGUI 4.13 (Windows, macOS, Linux/X11).
 
 ## Compiler
@@ -23,5 +23,5 @@ Le SDK AAX d'Avid et la signature PACE/iLok ne sont pas redistribuables :
 La latence AAX est déclarée statiquement : 0 en mode SNAP ; le mode PURE ajoute 64 échantillons (à compenser par le DAW).
 
 ## Écarts / limites connus
-- Aucun DRM. Face arrière : « BY OMYLL / ABRASION X ONIRIQUE » ; le sigil Onirique affiché au dos et dans l'en-tête est le logo fourni (masque 4 niveaux dans `src/ui/SigilData.h`).
+- Face arrière : « BY OMYLL / ABRASION X ONIRIQUE » ; le sigil Onirique affiché au dos et dans l'en-tête est le logo fourni (masque 4 niveaux dans `src/ui/SigilData.h`).
 - Testé ici (Linux) : DSP (CTest), validator VST3 officiel (47 réussis), rendu de la scène en PNG. **Non testé** : compilation Windows/macOS, AAX, rendu VSTGUI réel dans un DAW, plug-in avec GUI lié sous Linux.

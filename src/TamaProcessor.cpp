@@ -54,6 +54,7 @@ tresult PLUGIN_API TamaProcessor::setupProcessing (ProcessSetup& setup)
 	meterInterval = std::max (64, static_cast<int> (sampleRate * 0.016));
 	prepared = true;
 	dirty.store (true);
+	license.refresh (); // les DAW repassent par ici juste avant un export
 	return AudioEffect::setupProcessing (setup);
 }
 
@@ -139,6 +140,13 @@ tresult PLUGIN_API TamaProcessor::process (ProcessData& data)
 			else
 				run<float> (in.channelBuffers32, out.channelBuffers32, data.numSamples, ch, data);
 			out.silenceFlags = 0;
+
+			// Sans licence : bruit blanc à l'export, et par salves à l'écoute (voir License/DemoNoise.h).
+			const bool offline = data.processMode == kOffline;
+			if (data.symbolicSampleSize == kSample64)
+				license.process (out.channelBuffers64, static_cast<int> (out.numChannels), static_cast<int> (data.numSamples), sampleRate, offline);
+			else
+				license.process (out.channelBuffers32, static_cast<int> (out.numChannels), static_cast<int> (data.numSamples), sampleRate, offline);
 		}
 	}
 	pushMeters (data.outputParameterChanges, data.numSamples);

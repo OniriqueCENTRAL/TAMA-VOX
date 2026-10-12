@@ -116,6 +116,24 @@ void TamaScene::sunken (Painter& p, double x, double y, double w, double h, Colo
 // ---------------------------------------------------------------------------------------------
 void TamaScene::update (double now)
 {
+	// Licence : relue une fois par seconde. Une activation faite dans ONIRIQUE CENTRAL se voit ici sans rouvrir le plugin.
+	if (now - licenseReadMs > 1000.0)
+	{
+		const auto previous = licenseStatus.state;
+		licenseReadMs = now;
+		licenseStatus = license.status ();
+		if (!licenseShownOnce)
+		{
+			licenseShownOnce = true;
+			if (licenseStatus.state == onirique::license::State::unlicensed) showLicense ();
+		}
+		else if (dialogOpen && licenseDialog && previous != licenseStatus.state)
+		{
+			// Le plugin vient d'être activé : la page d'activation n'a plus lieu d'être.
+			if (licenseStatus.state == onirique::license::State::licensed) dialogOpen = false; else showLicense ();
+		}
+	}
+
 	nowCached = now;
 	const double dt = lastMs < 0 ? 0.033 : clampd ((now - lastMs) / 1000.0, 0.0, 0.25);
 	lastMs = now;
@@ -218,6 +236,7 @@ void TamaScene::drawTitleBar (Painter& p)
 	spacedText (p, "TAMA-VOX", 50, 7, 2, kBone, 3);
 	font::drawText (p, "VOCAL PROCESSOR", 50 + 8 * 20 + 22, 11, 1, kHaze);
 	font::drawText (p, "BY OMYLL \xC2\xB7 ABRASION X ONIRIQUE", kW - 12, 11, 1, kHaze, font::Align::Right);
+	drawLicensePill (p);
 	p.fillLinear (Painter::rectShape (0, kTitleH - 1, kW, 1), {0, 0}, {kW, 0}, {{0, kEmber}, {0.28, kEmber.alpha (0.5)}, {1, kLine}});
 }
 
@@ -708,6 +727,56 @@ void TamaScene::drawMenus (Painter& p)
 void TamaScene::showDialog (const std::string& title, const std::string& text)
 {
 	dialogOpen = true; dialogTitle = title; dialogText = font::wrap (text, 40); openMenu = -1;
+	licenseDialog = false;
+}
+
+// ---------------------------------------------------------------------------------------------
+// licence ONIRIQUE
+// ---------------------------------------------------------------------------------------------
+std::string TamaScene::pillLabel () const
+{
+	using onirique::license::State;
+	if (licenseStatus.state == State::licensed) return "ACTIV\xC3\x89";
+	if (licenseStatus.state == State::trial) return "ESSAI \xC2\xB7 " + std::to_string (licenseStatus.daysLeft ()) + " J \xC2\xB7 ACTIVATION";
+	return "MODE D\xC3\x89MO \xC2\xB7 ACTIVATION";
+}
+TamaScene::PillGeom TamaScene::pillGeom () const
+{
+	// entre « VOCAL PROCESSOR » et la signature, dans la barre de titre
+	const double w = font::textWidth (pillLabel (), 1) + 30.0;
+	return {std::floor (430.0 - w / 2), 5, w, 18};
+}
+bool TamaScene::hitPill (double x, double y) const
+{
+	const PillGeom g = pillGeom ();
+	return x >= g.x && x < g.x + g.w && y >= g.y && y < g.y + g.h;
+}
+void TamaScene::drawLicensePill (Painter& p)
+{
+	const bool active = licenseStatus.state == onirique::license::State::licensed;
+	const Color tint = active ? Color::rgb (0x6FDC9C) : kEmber;
+	const PillGeom g = pillGeom ();
+	p.roundRect (g.x, g.y, g.w, g.h, g.h / 2, active ? kNight.alpha (0.6) : tint.alpha (0.2));
+	p.stroke (Painter::roundRectShape (g.x + 0.5, g.y + 0.5, g.w - 1, g.h - 1, g.h / 2), true, 1, tint.alpha (active ? 0.45 : 0.8));
+	p.ellipse (g.x + 11, g.y + g.h / 2, 4.5, 4.5, tint.alpha (0.35));
+	p.ellipse (g.x + 11, g.y + g.h / 2, 2.5, 2.5, tint);
+	font::drawText (p, pillLabel (), g.x + 21, g.y + 6, 1, active ? kBone.alpha (0.85) : kBone);
+}
+void TamaScene::showLicense ()
+{
+	using onirique::license::State;
+	const std::string account = licenseStatus.email.empty () ? std::string () : " sur le compte " + licenseStatus.email;
+	if (licenseStatus.state == State::licensed)
+		showDialog ("PLUGIN ACTIV\xC3\x89", "TAMA-VOX est activ\xC3\xA9 sur cette machine" + account + ".\n\nVos licences et vos machines activ\xC3\xA9" "es se g\xC3\xA8rent dans ONIRIQUE CENTRAL.");
+	else if (licenseStatus.state == State::trial)
+		showDialog ("ESSAI GRATUIT \xC2\xB7 " + std::to_string (licenseStatus.daysLeft ()) + " J",
+		            "Essai de TAMA-VOX en cours" + account + ".\n\nLe plugin fonctionne normalement en temps r\xC3\xA9" "el. Tout export reste remplac\xC3\xA9 par un bruit blanc tant que le plugin n'est pas achet\xC3\xA9.\n\n"
+		            "Achetez-le sur onirique.store ou dans ONIRIQUE CENTRAL : l'achat est pris en compte ici en quelques secondes.");
+	else
+		showDialog ("ACTIVATION REQUISE",
+		            "TAMA-VOX n'est pas activ\xC3\xA9 sur cette machine.\n\nSans licence, l'\xC3\xA9" "coute est coup\xC3\xA9" "e par un bruit blanc toutes les trente secondes et tout export est remplac\xC3\xA9 par ce bruit.\n\n"
+		            "Ouvrez ONIRIQUE CENTRAL, connectez-vous \xC3\xA0 votre compte, puis activez le plugin ou lancez son essai gratuit de 7 jours. L'activation est prise en compte ici en quelques secondes.");
+	licenseDialog = true;
 }
 
 TamaScene::DialogGeom TamaScene::dialogGeom () const
@@ -719,6 +788,14 @@ TamaScene::DialogGeom TamaScene::dialogGeom () const
 	g.h = 28 + 26 + th + 20 + 30 + 18;
 	g.x = std::floor ((kW - g.w) / 2); g.y = std::floor (150);
 	g.okW = 96; g.okH = 28; g.okX = g.x + g.w / 2 - g.okW / 2; g.okY = g.y + g.h - g.okH - 14;
+	g.centralX = 0; g.centralW = 0;
+	if (licenseDialog)
+	{
+		// page de la licence : « ONIRIQUE CENTRAL » à gauche de « OK »
+		g.centralW = 196;
+		g.centralX = g.x + g.w / 2 - (g.centralW + 12 + g.okW) / 2;
+		g.okX = g.centralX + g.centralW + 12;
+	}
 	return g;
 }
 
@@ -739,6 +816,11 @@ void TamaScene::drawDialog (Painter& p)
 	font::drawText (p, dialogText, g.x + 54, g.y + 40, kScaleUi, kInk);
 	raised (p, g.okX, g.okY, g.okW, g.okH, pressedTitleBtn == 100);
 	font::drawText (p, "OK", g.okX + g.okW / 2, g.okY + 7, kScaleUi, kInk, font::Align::Centre);
+	if (licenseDialog)
+	{
+		raised (p, g.centralX, g.okY, g.centralW, g.okH, pressedTitleBtn == 101);
+		font::drawText (p, "ONIRIQUE CENTRAL", g.centralX + g.centralW / 2, g.okY + 7, kScaleUi, kInk, font::Align::Centre);
+	}
 	
 }
 
@@ -748,7 +830,14 @@ void TamaScene::drawDialog (Painter& p)
 void TamaScene::updateCursor (double x, double y)
 {
 	cur = CursorKind::Arrow;
-	if (dialogOpen) { const DialogGeom g = dialogGeom (); if (x >= g.okX && x < g.okX + g.okW && y >= g.okY && y < g.okY + g.okH) cur = CursorKind::Hand; return; }
+	if (dialogOpen)
+	{
+		const DialogGeom g = dialogGeom ();
+		const bool onRow = y >= g.okY && y < g.okY + g.okH;
+		if (onRow && ((x >= g.okX && x < g.okX + g.okW) || (licenseDialog && x >= g.centralX && x < g.centralX + g.centralW))) cur = CursorKind::Hand;
+		return;
+	}
+	if (openMenu < 0 && hitPill (x, y)) { cur = CursorKind::Hand; return; }
 	if (openMenu >= 0)
 	{
 		const auto items = buildMenu (openMenu);
@@ -775,6 +864,15 @@ void TamaScene::mouseDown (double x, double y, int button, int mods, int clicks)
 	{
 		const DialogGeom g = dialogGeom ();
 		if (x >= g.okX && x < g.okX + g.okW && y >= g.okY && y < g.okY + g.okH) pressedTitleBtn = 100;
+		else if (licenseDialog && x >= g.centralX && x < g.centralX + g.centralW && y >= g.okY && y < g.okY + g.okH) pressedTitleBtn = 101;
+		return;
+	}
+	// pastille de la licence : la licence est relue tout de suite, puis sa page s'ouvre
+	if (openMenu < 0 && hitPill (x, y))
+	{
+		license.refresh ();
+		licenseStatus = license.status ();
+		showLicense ();
 		return;
 	}
 	// menus
@@ -872,6 +970,13 @@ void TamaScene::mouseMove (double x, double y, int mods)
 void TamaScene::mouseUp (double x, double y, int button)
 {
 	(void) button;
+	if (pressedTitleBtn == 101)
+	{
+		const DialogGeom g = dialogGeom ();
+		if (x >= g.centralX && x < g.centralX + g.centralW && y >= g.okY && y < g.okY + g.okH) onirique::license::core::openCentral ();
+		pressedTitleBtn = -1;
+		return;
+	}
 	if (pressedTitleBtn == 100)
 	{
 		const DialogGeom g = dialogGeom ();

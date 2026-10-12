@@ -5,6 +5,7 @@
 #include "Lcd.h"
 #include "Painter.h"
 #include "UiHost.h"
+#include "License/LicenseCore.h"
 #include <functional>
 #include <string>
 #include <vector>
@@ -61,8 +62,18 @@ private:
 	// ---------- dialogue ----------
 	void showDialog (const std::string& title, const std::string& text);
 	void drawDialog (Painter& p);
-	struct DialogGeom { double x, y, w, h, okX, okY, okW, okH; };
+	struct DialogGeom { double x, y, w, h, okX, okY, okW, okH, centralX, centralW; };
 	DialogGeom dialogGeom () const;
+
+	// ---------- licence ONIRIQUE ----------
+	// Pastille dans la barre de titre (« MODE DÉMO · ACTIVATION », « ESSAI · 5 J · ACTIVATION » ou le témoin
+	// « ACTIVÉ ») ; un clic ouvre la page de la licence, ouverte d'office quand le plugin n'est pas activé.
+	struct PillGeom { double x, y, w, h; };
+	std::string pillLabel () const;
+	PillGeom pillGeom () const;
+	bool hitPill (double x, double y) const;
+	void drawLicensePill (Painter& p);
+	void showLicense ();
 
 	// ---------- dessin ----------
 	void update (double nowMs);
@@ -96,6 +107,10 @@ private:
 	void pressButton (int i);
 
 	IUiHost& host;
+	onirique::license::core::Guard license {"onirique-x-abrasion-tama-vox"};
+	onirique::license::core::Status licenseStatus;
+	double licenseReadMs = -1e9;
+	bool licenseDialog = false, licenseShownOnce = false;
 	// animation
 	double lastMs = -1, swing = 0, swingPhase = 0, flip = 0, flipTarget = 0;
 	bool hoverEgg = false;

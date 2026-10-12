@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 
 # ------------------------------------------------------------------------------------------------
 # TAMA-VOX - processeur vocal VST3 / AAX  (Windows, macOS, Linux)
-# Pas de JUCE, pas de DRM. SDK VST3 de Steinberg (licence MIT/GPLv3 selon version, voir README).
+# Pas de JUCE. Licence ONIRIQUE dans License/. SDK VST3 de Steinberg (licence MIT/GPLv3 selon version, voir README).
 # ------------------------------------------------------------------------------------------------
 
 # macOS : binaire universel et cible minimale, à régler AVANT project()
@@ -131,6 +131,10 @@ smtg_add_vst3plugin(TAMA_VOX ${TAMA_PLUGIN_SOURCES})
 smtg_target_configure_version_file(TAMA_VOX)
 tama_target_defaults(TAMA_VOX)
 target_link_libraries(TAMA_VOX PRIVATE sdk)
+
+# Licence ONIRIQUE : le dossier License/ est le même dans tous les plugins (voir License/README.md).
+include(License/OniriqueLicense.cmake)
+onirique_add_license_core(TAMA_VOX)
 if(TAMA_ENABLE_GUI)
   target_link_libraries(TAMA_VOX PRIVATE vstgui_support)
 endif()
@@ -172,6 +176,7 @@ if(TAMA_BUILD_AAX)
   smtg_add_aaxplugin(TAMA_VOX_AAX ${TAMA_AAX_SOURCES})
   smtg_target_configure_version_file(TAMA_VOX_AAX)
   tama_target_defaults(TAMA_VOX_AAX)
+  onirique_add_license_core(TAMA_VOX_AAX)
   target_link_libraries(TAMA_VOX_AAX PRIVATE sdk aaxwrapper)
   if(TAMA_ENABLE_GUI)
     target_link_libraries(TAMA_VOX_AAX PRIVATE vstgui_support)

@@ -3,6 +3,7 @@
 #include "StdCommon.h"
 #include "TamaParams.h"
 #include "dsp/TamaEngine.h"
+#include "License/LicenseCore.h"
 #include "public.sdk/source/vst/vstaudioeffect.h"
 #include <atomic>
 
@@ -34,6 +35,9 @@ private:
 	void readParameterChanges (Steinberg::Vst::IParameterChanges* changes);
 	void pushMeters (Steinberg::Vst::IParameterChanges* out, int numSamples);
 	void rebuildEngineParams ();
+
+	// Licence ONIRIQUE (acheté, essai, démo) : voir License/LicenseCore.h.
+	onirique::license::core::Guard license {"onirique-x-abrasion-tama-vox"};
 
 	TamaEngine engine;
 	std::atomic<double> norm[id::kNumParams];
