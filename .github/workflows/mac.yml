@@ -1,0 +1,78 @@
+# Version Mac de TAMA-VOX pour ONIRIQUE CENTRAL : VST3 universel (Intel et Apple Silicon), signé localement.
+# À chaque envoi sur main. Le résultat est laissé sur la branche ci-build-macOS (TAMA_VOX.vst3.zip, le fichier
+# à publier dans CENTRAL comme version Mac), et le journal de la compilation sur la branche ci-logs-macOS.
+name: Mac
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  mac:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurer
+        run: cmake -S . -B build -G Xcode -DTAMA_DEPLOY=OFF -DTAMA_BUILD_TESTS=OFF > configure.log 2>&1
+
+      - name: Compiler
+        run: cmake --build build --config Release --target TAMA_VOX -- -quiet > build.log 2>&1
+
+      # Sans compte Apple Developer, le plugin porte une signature locale (« ad hoc ») : le minimum pour qu'un DAW
+      # le charge sur un Mac Apple Silicon.
+      - name: Signer et empaqueter
+        run: |
+          PLUGIN="$(find build -type d -name 'TAMA_VOX.vst3' | grep Release | head -n 1)"
+          test -n "$PLUGIN"
+          lipo -info "$PLUGIN/Contents/MacOS/TAMA_VOX" | tee -a build.log
+          codesign --force --deep --sign - "$PLUGIN"
+          codesign --verify --deep --strict "$PLUGIN"
+          mkdir -p paquet dist
+          cp -R "$PLUGIN" paquet/
+          # Format ONIRIQUE CENTRAL : « NOM.vst3.zip » avec NOM.vst3 à la racine.
+          (cd paquet && ditto -c -k . ../dist/TAMA_VOX.vst3.zip)
+
+      # Le contrôle officiel de Steinberg charge le plugin comme le ferait un DAW. Un échec n'empêche pas de
+      # récupérer le fichier, mais il est écrit dans le journal.
+      - name: Valider (validator VST3)
+        continue-on-error: true
+        run: |
+          cmake --build build --config Release --target validator -- -quiet >> build.log 2>&1
+          "$(find build -type f -name validator | grep Release | head -n 1)" paquet/TAMA_VOX.vst3 > validator.log 2>&1
+
+      - name: Laisser le journal sur une branche
+        if: always()
+        run: |
+          mkdir logs
+          echo "${{ job.status }} - ${{ github.sha }} - $(date -u +%FT%TZ)" > logs/status.txt
+          for f in configure.log build.log validator.log; do
+            [ -f "$f" ] || continue
+            grep -n -E "error[: ]|Error:|FAIL|\*\* BUILD|passed|failed|Architectures" "$f" | head -n 200 > "logs/${f%.log}-errors.txt" || true
+            tail -n 120 "$f" > "logs/${f%.log}-tail.txt"
+          done
+          cd logs
+          git init -q
+          git config user.name "build"
+          git config user.email "build@users.noreply.github.com"
+          git checkout -q -b ci-logs-macOS
+          git add -A
+          git commit -q -m "Journal de ${{ github.sha }}"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:ci-logs-macOS
+
+      - name: Laisser le plugin sur une branche
+        if: success()
+        run: |
+          cd dist
+          echo "${{ github.sha }} - $(date -u +%FT%TZ)" > BUILD.txt
+          git init -q
+          git config user.name "build"
+          git config user.email "build@users.noreply.github.com"
+          git checkout -q -b ci-build-macOS
+          git add -A
+          git commit -q -m "Compilation de ${{ github.sha }}"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:ci-build-macOS
