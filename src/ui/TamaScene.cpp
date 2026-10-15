@@ -738,6 +738,7 @@ std::string TamaScene::pillLabel () const
 	using onirique::license::State;
 	if (licenseStatus.state == State::licensed) return "ACTIV\xC3\x89";
 	if (licenseStatus.state == State::trial) return "ESSAI \xC2\xB7 " + std::to_string (licenseStatus.daysLeft ()) + " J \xC2\xB7 ACTIVATION";
+	if (licenseStatus.renewal) return "\xC3\x80 RENOUVELER";
 	return "MODE D\xC3\x89MO \xC2\xB7 ACTIVATION";
 }
 TamaScene::PillGeom TamaScene::pillGeom () const
@@ -772,6 +773,11 @@ void TamaScene::showLicense ()
 		showDialog ("ESSAI GRATUIT \xC2\xB7 " + std::to_string (licenseStatus.daysLeft ()) + " J",
 		            "Essai de TAMA-VOX en cours" + account + ".\n\nLe plugin fonctionne normalement en temps r\xC3\xA9" "el. Tout export reste remplac\xC3\xA9 par un bruit blanc tant que le plugin n'est pas achet\xC3\xA9.\n\n"
 		            "Achetez-le sur onirique.store ou dans ONIRIQUE CENTRAL : l'achat est pris en compte ici en quelques secondes.");
+	else if (licenseStatus.renewal)
+		showDialog ("LICENCE \xC3\x80 RENOUVELER",
+		            "TAMA-VOX est bien \xC3\xA0 vous" + account + ", mais sa licence n'a pas \xC3\xA9t\xC3\xA9 renouvel\xC3\xA9" "e depuis plus de 90 jours.\n\n"
+		            "Ouvrez ONIRIQUE CENTRAL avec une connexion Internet : il renouvelle vos licences en quelques secondes, et le plugin repart aussit\xC3\xB4t. "
+		            "Hors ligne, une licence reste valable 90 jours apr\xC3\xA8s chaque renouvellement.");
 	else
 		showDialog ("ACTIVATION REQUISE",
 		            "TAMA-VOX n'est pas activ\xC3\xA9 sur cette machine.\n\nSans licence, l'\xC3\xA9" "coute est coup\xC3\xA9" "e par un bruit blanc toutes les trente secondes et tout export est remplac\xC3\xA9 par ce bruit.\n\n"
