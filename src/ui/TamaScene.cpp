@@ -780,7 +780,7 @@ void TamaScene::showLicense ()
 		            "Hors ligne, une licence reste valable 90 jours apr\xC3\xA8s chaque renouvellement.");
 	else
 		showDialog ("ACTIVATION REQUISE",
-		            "TAMA-VOX n'est pas activ\xC3\xA9 sur cette machine.\n\nSans licence, l'\xC3\xA9" "coute est coup\xC3\xA9" "e par un bruit blanc toutes les trente secondes et tout export est remplac\xC3\xA9 par ce bruit.\n\n"
+		            "TAMA-VOX n'est pas activ\xC3\xA9 sur cette machine.\n\nSans licence, le plugin fonctionne en temps r\xC3\xA9" "el dans le DAW, mais tout export est remplac\xC3\xA9 par un bruit blanc.\n\n"
 		            "Ouvrez ONIRIQUE CENTRAL, connectez-vous \xC3\xA0 votre compte, puis activez le plugin ou lancez son essai gratuit de 7 jours. L'activation est prise en compte ici en quelques secondes.");
 	licenseDialog = true;
 }
