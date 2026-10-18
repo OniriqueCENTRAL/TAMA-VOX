@@ -1,0 +1,1 @@
+644:Architectures in the fat file: build/VST3/Release/TAMA_VOX.vst3/Contents/MacOS/TAMA_VOX are: x86_64 arm64 

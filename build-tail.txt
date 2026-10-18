@@ -1,0 +1,120 @@
+    sel25519(a,b,r);
+    ~~~~~~~~     ^
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:411:18: warning: implicit conversion loses integer precision: 'i64' (aka 'long long') to 'int' [-Wshorten-64-to-32]
+    sel25519(c,d,r);
+    ~~~~~~~~     ^
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:430:18: warning: implicit conversion loses integer precision: 'i64' (aka 'long long') to 'int' [-Wshorten-64-to-32]
+    sel25519(a,b,r);
+    ~~~~~~~~     ^
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:431:18: warning: implicit conversion loses integer precision: 'i64' (aka 'long long') to 'int' [-Wshorten-64-to-32]
+    sel25519(c,d,r);
+    ~~~~~~~~     ^
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:548:10: warning: implicit conversion loses integer precision: 'u64' (aka 'unsigned long long') to 'int' [-Wshorten-64-to-32]
+  return n;
+  ~~~~~~ ^
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:723:3: warning: comparison of integers of different signs: 'i64' (aka 'long long') and 'u64' (aka 'unsigned long long') [-Wsign-compare]
+  FOR(i,n) sm[64 + i] = m[i];
+  ^   ~ ~
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:2:31: note: expanded from macro 'FOR'
+#define FOR(i,n) for (i = 0;i < n;++i)
+                            ~ ^ ~
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:790:3: warning: comparison of integers of different signs: 'int' and 'u64' (aka 'unsigned long long') [-Wsign-compare]
+  FOR(i,n) m[i] = sm[i];
+  ^   ~ ~
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:2:31: note: expanded from macro 'FOR'
+#define FOR(i,n) for (i = 0;i < n;++i)
+                            ~ ^ ~
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:802:5: warning: comparison of integers of different signs: 'int' and 'u64' (aka 'unsigned long long') [-Wsign-compare]
+    FOR(i,n) m[i] = 0;
+    ^   ~ ~
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:2:31: note: expanded from macro 'FOR'
+#define FOR(i,n) for (i = 0;i < n;++i)
+                            ~ ^ ~
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:806:3: warning: comparison of integers of different signs: 'int' and 'u64' (aka 'unsigned long long') [-Wsign-compare]
+  FOR(i,n) m[i] = sm[i + 64];
+  ^   ~ ~
+/Users/runner/work/TAMA-VOX/TAMA-VOX/License/tweetnacl.c:2:31: note: expanded from macro 'FOR'
+#define FOR(i,n) for (i = 0;i < n;++i)
+                            ~ ^ ~
+10 warnings generated.
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaView.cpp:6:
+/Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/cdrawcontext.h:154:2: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
+        const CFontRef getFont () const;
+        ^~~~~~
+1 warning generated.
+/Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaScene.cpp:23:17: warning: unused variable 'kFace' [-Wunused-const-variable]
+constexpr Color kFace = kDeep2, kHi = kBone, kSoft = kHaze, kLo = kLine, kInk = kBone;
+                ^
+/Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaScene.cpp:23:46: warning: unused variable 'kSoft' [-Wunused-const-variable]
+constexpr Color kFace = kDeep2, kHi = kBone, kSoft = kHaze, kLo = kLine, kInk = kBone;
+                                             ^
+/Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaScene.cpp:23:61: warning: unused variable 'kLo' [-Wunused-const-variable]
+constexpr Color kFace = kDeep2, kHi = kBone, kSoft = kHaze, kLo = kLine, kInk = kBone;
+                                                            ^
+/Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaScene.cpp:24:48: warning: unused variable 'kSky' [-Wunused-const-variable]
+constexpr Color kNavy = Color::rgb (0xA3202F), kSky = kBlood;
+                                               ^
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaScene.cpp:2:
+/Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaScene.h:137:9: warning: private field 'drivePreview' is not used [-Wunused-private-field]
+        double drivePreview = 0; // pour l'affichage de la valeur pendant le glissement
+               ^
+/Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaScene.h:138:9: warning: private field 'knobTipUntil' is not used [-Wunused-private-field]
+        double knobTipUntil = 0;
+               ^
+6 warnings generated.
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaEditor.cpp:2:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaEditor.h:5:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/public.sdk/source/vst/vstguieditor.h:40:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/vstgui.h:14:
+/Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/cdrawcontext.h:154:2: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
+        const CFontRef getFont () const;
+        ^~~~~~
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaEditor.cpp:2:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaEditor.h:5:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/public.sdk/source/vst/vstguieditor.h:40:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/vstgui.h:44:
+/Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/controls/cbuttons.h:79:2: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
+        const CFontRef getFont () const { return font; }
+        ^~~~~~
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaEditor.cpp:2:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaEditor.h:5:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/public.sdk/source/vst/vstguieditor.h:40:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/vstgui.h:45:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/controls/ccolorchooser.h:10:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/controls/ctextedit.h:7:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/controls/ctextlabel.h:7:
+/Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/controls/cparamdisplay.h:48:2: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
+        const CFontRef getFont () const { return fontID; }
+        ^~~~~~
+3 warnings generated.
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/TamaController.cpp:9:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaEditor.h:5:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/public.sdk/source/vst/vstguieditor.h:40:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/vstgui.h:14:
+/Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/cdrawcontext.h:154:2: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
+        const CFontRef getFont () const;
+        ^~~~~~
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/TamaController.cpp:9:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaEditor.h:5:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/public.sdk/source/vst/vstguieditor.h:40:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/vstgui.h:44:
+/Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/controls/cbuttons.h:79:2: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
+        const CFontRef getFont () const { return font; }
+        ^~~~~~
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/TamaController.cpp:9:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/src/ui/TamaEditor.h:5:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/public.sdk/source/vst/vstguieditor.h:40:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/vstgui.h:45:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/controls/ccolorchooser.h:10:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/controls/ctextedit.h:7:
+In file included from /Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/controls/ctextlabel.h:7:
+/Users/runner/work/TAMA-VOX/TAMA-VOX/build/_deps/vst3sdk-src/vstgui4/vstgui/lib/controls/cparamdisplay.h:48:2: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
+        const CFontRef getFont () const { return fontID; }
+        ^~~~~~
+3 warnings generated.
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/TAMA-VOX/TAMA-VOX/build/VST3/Release/TAMA_VOX.vst3/Contents/MacOS/TAMA_VOX (for architecture x86_64)
+/Applications/Xcode_15.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip: warning: changes being made to the file will invalidate the code signature in: /Users/runner/work/TAMA-VOX/TAMA-VOX/build/VST3/Release/TAMA_VOX.vst3/Contents/MacOS/TAMA_VOX (for architecture arm64)
+note: Run script build phase 'CMake PreBuild Rules' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'TAMA_VOX' from project 'TAMA_VOX')
+note: Run script build phase 'CMake PostBuild Rules' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'TAMA_VOX' from project 'TAMA_VOX')
+note: Run script build phase 'Generate CMakeFiles/ZERO_CHECK' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'ZERO_CHECK' from project 'TAMA_VOX')
+Architectures in the fat file: build/VST3/Release/TAMA_VOX.vst3/Contents/MacOS/TAMA_VOX are: x86_64 arm64 
